@@ -1,30 +1,26 @@
 use crate::shared_state::*;
 use axum::{Json, extract::{Path, State}, http::header::HeaderMap};
-use serde::{Deserialize, Serialize};
-
-// #[derive(Debug, Deserialize)]
-// struct GetEventsIdRequest {
-//     event_type: String, 
-//     payload: serde_json::Value,
-// }
+use serde::Serialize;
+use utoipa;
 
 #[derive(Debug, Serialize)]
 pub struct GetEventsIdResponse {
     id: String, 
-    event: String, 
+    event: Event, 
     status: String,
 }
 
+#[utoipa::path(get, path = "/events/{id}")]
 pub async fn get_events_id_handle(State(state): State<SharedState>, Path(id): Path<String>, header_map: HeaderMap) -> Json<GetEventsIdResponse> {
-    let mut log = state.log.write().unwrap();
+    let mut db = state.db.write().expect("Write lock should be available because server is single threaded for now.");
+    
+    let event = db.entry("get_events_id_accesses".to_string())
+        .or_insert_with(|| Event {name: "".to_string()});
+    event.name.push('a');
 
-    log.push(String::from("get_events_id_handle"));
-    for (s1, s2) in header_map.into_iter() {
-        println!("{}: {:?}", s1.unwrap(), s2);
-    }
     Json (GetEventsIdResponse {
         id: "event_asdf".to_string(),
-        event: log.join(", "), 
+        event: event.clone(), 
         status: "accepted".to_string(),
     })
 } 

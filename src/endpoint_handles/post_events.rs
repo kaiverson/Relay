@@ -1,6 +1,7 @@
 use crate::shared_state::*;
-use axum::{Json, extract::{Path, State}, http::header::HeaderMap};
+use axum::{Json, extract::State};
 use serde::{Deserialize, Serialize};
+use utoipa;
 
 #[derive(Debug, Deserialize)]
 pub struct PostEventsRequest {
@@ -12,6 +13,10 @@ pub struct PostEventsResponse {
     status: String,
 }
 
+#[utoipa::path(
+    post, 
+    path = "/events", 
+)]
 pub async fn post_events_handle(
     State(state): State<SharedState>, 
     Json(request): Json<PostEventsRequest>

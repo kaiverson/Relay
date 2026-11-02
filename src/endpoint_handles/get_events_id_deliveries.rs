@@ -1,12 +1,14 @@
 use crate::shared_state::*;
 use axum::{Json, extract::{Path, State}};
 use serde::Serialize;
+use utoipa;
 
 #[derive(Debug, Serialize)]
 pub struct GetEventsIdDeliveriesResponse {
     deliveries: String,
 }
 
+#[utoipa::path(get, path="/events/{id}/deliveries")]
 pub async fn get_events_id_deliveries_handle(State(state): State<SharedState>, Path(id): Path<String>) -> Json<GetEventsIdDeliveriesResponse> {
     Json ( GetEventsIdDeliveriesResponse {
         deliveries: "endpoint not implimented".to_string(), 
