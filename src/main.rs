@@ -10,6 +10,8 @@ use tracing::info;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+    tracing_subscriber::fmt::init();
+    
     let config = Config::from_env()?;
     let pool = setup_database(&config).await?;
     let state = build_app_state(pool, config.clone());
@@ -63,19 +65,3 @@ pub async fn shutdown_signal() {
         .await 
         .expect("Failed to install CTRL+C signal handler");
 }
-
-
-// async fn connection_pool_init() -> ConnectionPool {
-//     let db_connection_url = std::env::var("DATABASE_URL")
-//         .expect("DATABASE_URL should be set");
-
-//     tracing::info!("connecting to database host: {}", db_connection_url.split('@').last().unwrap_or("?"));
-     
-//     PgPoolOptions::new()
-//         .max_connections(16)
-//         .acquire_timeout(Duration::from_secs(5))
-//         .connect(&db_connection_url)
-//         .await
-//         .expect("Can't connect to database")
-// }
-

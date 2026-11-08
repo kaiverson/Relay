@@ -10,7 +10,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
 
     ports:
-      - "1234:5432"
+      - "5432:5432"
 
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -29,10 +29,14 @@ services:
 
     environment:
       DATABASE_URL: ${DATABASE_URL}
+      DATABASE_MAX_CONNECTIONS: ${DATABASE_MAX_CONNECTIONS:-5}
+      DATABASE_MIN_CONNECTIONS: ${DATABASE_MIN_CONNECTIONS:-1c}
+      SERVICE_HOST: ${SERVICE_HOST}
+      SERVICE_PORT: ${SERVICE_PORT}
       RUST_LOG: debug
 
     ports:
-      - "3000:3000"
+      - "1234:1234"
 
     depends_on:
       db:

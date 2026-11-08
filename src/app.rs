@@ -5,23 +5,24 @@ use axum::{
 };
 
 
-use utoipa::openapi::OpenApi;
-use utoipa_swagger_ui::SwaggerUi;
+// use utoipa::openapi::OpenApi;
+// use utoipa_swagger_ui::SwaggerUi;
 
 use crate::{
     domains::{
         events::{event_routes,},
+        z_pages::{z_page_routes}
     }
 };
 
 
-fn create_swagger_ui(doc: OpenApi) -> SwaggerUi {
-    SwaggerUi::new("/docs")
-        .url(
-            "/api-docs/user_auth/openapi.json", 
-            doc,
-        )
-}
+// fn _create_swagger_ui(doc: OpenApi) -> SwaggerUi {
+//     SwaggerUi::new("/docs")
+//         .url(
+//             "/api-docs/user_auth/openapi.json", 
+//             doc,
+//         )
+// }
 
 pub fn create_router(shared_state: AppState) -> Router {
     // let middleware_stack = ServiceBuilder::new()
@@ -43,9 +44,13 @@ pub fn create_router(shared_state: AppState) -> Router {
         .nest("/events", event_routes());
         // .route_layer(middleware::from_fn(jwt::jwt_auth));
 
+    let z_page_routes = Router::new()
+        .merge(z_page_routes());
+
     Router::new()
         // .route("/health", axum::routing::get(health_check))
         .merge(event_routes)
+        .merge(z_page_routes)
         // .fallback(fallback)
         .with_state(shared_state)
 }

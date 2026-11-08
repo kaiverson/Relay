@@ -1,7 +1,4 @@
 use axum::{
-    Router,
-    body::{self, Bytes},
-    routing::get,
     http::StatusCode,
     response::{IntoResponse, Response},
 };
