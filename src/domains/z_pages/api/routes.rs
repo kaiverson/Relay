@@ -7,5 +7,5 @@ use axum::{
 
 pub fn z_page_routes() -> Router<AppState> {
     Router::new() 
-        .route("/", get(handlers::get_healthz))
+        .route("/healthz", get(handlers::get_healthz))
 }  
