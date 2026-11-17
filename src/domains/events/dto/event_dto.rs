@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use simple_dto_mapper_derive::DtoFrom;
 use utoipa::ToSchema;
-use validator::Validate;
 
 use crate::domains::events::domain::model::Event;
 

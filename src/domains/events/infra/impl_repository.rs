@@ -5,7 +5,7 @@ use crate::domains::events::{
 use async_trait::async_trait;
 
 use chrono::Utc;
-use sqlx::{PgPool, Postgres, QueryBuilder, Transaction};
+use sqlx::{PgPool, Postgres, Transaction};
 use uuid::Uuid;
 
 pub struct EventRepo;

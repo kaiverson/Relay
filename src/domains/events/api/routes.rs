@@ -3,7 +3,7 @@ use crate::{
     app_state::AppState,
 };
 use axum::{
-    routing::{get, post, put, delete}, 
+    routing::{get, post, delete}, 
     Router
 };
 

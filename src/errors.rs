@@ -1,14 +1,12 @@
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
-    BoxError,
 };
 
 use sqlx::Error as SqlxError;
 use thiserror::Error;
-use tracing::error;
 
-use crate::dto::{ApiResponse, RestApiResponse};
+use crate::dto::ApiResponse;
 
 #[derive(Error, Debug)]
 pub enum AppError {
