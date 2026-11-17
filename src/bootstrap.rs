@@ -27,6 +27,10 @@ pub async fn setup_database(config: &Config) -> Result<PgPool, sqlx::Error> {
         }
     };
 
+    sqlx::migrate!("./migrations")
+        .run(&pool)
+        .await?;
+
     Ok(pool)
 }
 
