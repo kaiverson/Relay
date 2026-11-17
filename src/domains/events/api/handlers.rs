@@ -64,8 +64,8 @@ pub async fn delete_all_events(
 
 #[utoipa::path(
     get, 
-    path = "/event/{id}",
-    responses((status = 200, description = "Get event by ID", body = EventDto)),
+    path = "/event/{uuid}",
+    responses((status = 200, description = "Get event by UUID", body = EventDto)),
     tag = "Events"
 )]
 pub async fn get_event(
@@ -80,7 +80,7 @@ pub async fn get_event(
 
 #[utoipa::path(
     delete, 
-    path="/event/{id}",
+    path="/event/{uuid}",
     responses((status = 200, description = "Delete event", body = EventDto)),
     tag="Events"
 )]
@@ -96,15 +96,15 @@ pub async fn delete_event(
 
 #[utoipa::path(
     get, 
-    path = "/event/{id}/deliveries",
+    path = "/event/{uuid}/deliveries",
     responses((status = 200, description = "Get event deliveries")),
     tag = "Events"
 )]
 pub async fn get_event_deliveries(
     State(_state): State<AppState>, 
-    axum::extract::Path(id): axum::extract::Path<String>,
+    axum::extract::Path(uuid): axum::extract::Path<Uuid>,
 ) -> Result<impl IntoResponse, AppError> {
-    if id == "succeed" {
+    if uuid.is_max() {
         Ok("Placeholder happy path.")
     } 
     else {
