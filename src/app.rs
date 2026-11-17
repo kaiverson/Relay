@@ -27,7 +27,7 @@ pub fn create_router(shared_state: AppState) -> Router {
 
 
     let event_routes = Router::new()
-        .nest("/events", event_routes());
+        .nest("/event", event_routes());
         // .route_layer(middleware::from_fn(jwt::jwt_auth));
 
     let z_page_routes = Router::new()

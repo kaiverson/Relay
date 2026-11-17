@@ -13,6 +13,6 @@ pub fn event_routes() -> Router<AppState> {
         .route("/", get(handlers::get_all_events))
         .route("/", delete(handlers::delete_all_events))
         .route("/{id}", get(handlers::get_event))
-        .route("/{id}", put(handlers::put_event_update))
+        .route("/{id}", delete(handlers::delete_event))
         .route("/{id}/deliveries", get(handlers::get_event_deliveries))
 }  
