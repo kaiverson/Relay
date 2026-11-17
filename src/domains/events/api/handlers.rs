@@ -1,13 +1,18 @@
 use crate::{
     dto::RestApiResponse,
     app_state::AppState,
-    errors::AppError
+    errors::AppError,
+    domains::{
+        events::dto::event_dto::{CreateEventDto, EventDto},
+    }
 };
 
 use axum::{
     extract::State,
     response::IntoResponse,
+    Json,
 };
+use uuid::Uuid;
 
 
 
@@ -18,10 +23,11 @@ use axum::{
     tag = "Events"
 )]
 pub async fn post_event(
-    State(_state): State<AppState>, 
-    // Json(payload): Json<EventDto>,
+    State(state): State<AppState>, 
+    Json(create_event): Json<CreateEventDto>,
 ) -> Result<impl IntoResponse, AppError> {
-    Ok(RestApiResponse::<String>::failure(501, "Not Implemented Error"))
+    let event = state.event_service.create_event(create_event).await?;
+    Ok(RestApiResponse::success(event))
 }
 
 
@@ -29,18 +35,14 @@ pub async fn post_event(
 #[utoipa::path(
     get, 
     path = "/event", 
-    responses((status = 200, description = "Get all events", /* body = EventListDto */)),
+    responses((status = 200, description = "Get all events", body = Vec<EventDto>)),
     tag = "Events"
 )]
 pub async fn get_all_events(
-    State(_state): State<AppState>, 
+    State(state): State<AppState>, 
 ) -> Result<impl IntoResponse, AppError> {
-    if false {
-        Ok("Placeholder happy path")
-    } 
-    else {
-        Err(AppError::InternalServerError)
-    }
+    let events = state.event_service.get_events().await?;
+    Ok(RestApiResponse::success(events))
 }
 
 
@@ -52,14 +54,10 @@ pub async fn get_all_events(
     tag = "Events",
 )]
 pub async fn delete_all_events(
-    State(_state): State<AppState>,
+    State(state): State<AppState>,
 ) -> Result<impl IntoResponse, AppError> {
-    if false {
-        Ok("Placeholder happy path")
-    } 
-    else {
-        Err(AppError::InternalServerError)
-    }
+    let response = state.event_service.delete_all_events().await?;
+    Ok(response)
 }
 
 
@@ -67,46 +65,39 @@ pub async fn delete_all_events(
 #[utoipa::path(
     get, 
     path = "/event/{id}",
-    responses((status = 200, description = "Get event by ID", /*body = EventDto*/)),
+    responses((status = 200, description = "Get event by ID", body = EventDto)),
     tag = "Events"
 )]
 pub async fn get_event(
-    State(_state): State<AppState>, 
-    axum::extract::Path(id): axum::extract::Path<String>,
-) -> Result<impl IntoResponse, AppError> {
-    if id == "succeed" {
-        Ok("Placeholder happy path.")
-    } 
-    else {
-        Err(AppError::InternalServerError)
-    }
+    State(state): State<AppState>, 
+    axum::extract::Path(event_uuid): axum::extract::Path<Uuid>,
+) -> Result<impl IntoResponse, AppError> {    
+    let event = state.event_service.get_event_by_uuid(event_uuid).await?;
+    Ok(RestApiResponse::success(event))
 }
 
 
 
 #[utoipa::path(
-    put, 
-    path = "/event/{id}",
-    responses((status = 200, description = "Update event", /*body = EventDto*/)),
-    tag = "Events"
+    delete, 
+    path="/event/{id}",
+    responses((status = 200, description = "Delete event", body = EventDto)),
+    tag="Events"
 )]
-pub async fn put_event_update(
-    State(_state): State<AppState>, 
-    axum::extract::Path(id): axum::extract::Path<String>,
+pub async fn delete_event(
+    State(state): State<AppState>,
+    axum::extract::Path(event_uuid): axum::extract::Path<Uuid>
 ) -> Result<impl IntoResponse, AppError> {
-    if id == "succeed" {
-        Ok("Placeholder happy path.")
-    } 
-    else {
-        Err(AppError::InternalServerError)
-    }
+    let response = state.event_service.delete_event(event_uuid).await?;
+    Ok(response)
 }
+
 
 
 #[utoipa::path(
     get, 
     path = "/event/{id}/deliveries",
-    responses((status = 200, description = "Get event deliveries", /*body = EventDto*/)),
+    responses((status = 200, description = "Get event deliveries")),
     tag = "Events"
 )]
 pub async fn get_event_deliveries(
@@ -117,6 +108,6 @@ pub async fn get_event_deliveries(
         Ok("Placeholder happy path.")
     } 
     else {
-        Err(AppError::InternalServerError)
+        Err(AppError::InternalError)
     }
 }

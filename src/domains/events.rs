@@ -4,10 +4,21 @@ pub mod api {
 }
 
 pub mod domain {
+    pub mod model;
+    pub mod repository;
     pub mod service;
 }
 
-pub use api::routes::{event_routes};
-pub use domain::service::{EventServiceTrait, EventService};
+pub mod dto {
+    pub mod event_dto;
+}
 
+mod infra {
+    mod impl_repository;
+    pub mod impl_service;
+}
+
+pub use api::routes::{event_routes};
+pub use domain::service::EventServiceTrait;
+pub use infra::impl_service::EventService;
  
