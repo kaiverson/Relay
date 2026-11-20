@@ -11,7 +11,7 @@ use utoipa_axum::router::OpenApiRouter;
 use utoipa_swagger_ui::SwaggerUi;
 
 
-pub fn create_openapi_router(shared_state: AppState) -> Router {
+pub fn create_router(shared_state: AppState) -> Router {
     // let middleware_stack = ServiceBuilder::new()
     //     .layer(HandleErrorLayer::new(handle_error))
     //     .timeout(Duration::from_secs(1800));

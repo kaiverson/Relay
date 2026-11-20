@@ -1,5 +1,5 @@
 use Relay::{
-    app::create_openapi_router, 
+    app::create_router, 
     app_state::build_app_state, 
     bootstrap::{setup_database, shutdown_signal}, 
     config::Config,
@@ -14,7 +14,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let config = Config::from_env()?;
     let pool = setup_database(&config).await?;
     let state = build_app_state(pool, config.clone());
-    let app = create_openapi_router(state);
+    let app = create_router(state);
  
     let addr = format!("{}:{}", config.service_host, config.service_port);
 
