@@ -3,5 +3,5 @@ pub mod api {
     pub mod routes;
 }
 
-pub use api::routes::{z_page_routes};
+pub use api::routes::{z_page_openapi_router};
  

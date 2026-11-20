@@ -2,17 +2,14 @@ use super::handlers;
 use crate::{
     app_state::AppState,
 };
-use axum::{
-    routing::{get, post, delete}, 
-    Router
-};
+use utoipa_axum::{routes, router::OpenApiRouter};
 
-pub fn event_routes() -> Router<AppState> {
-    Router::new() 
-        .route("/", post(handlers::post_event))
-        .route("/", get(handlers::get_all_events))
-        .route("/", delete(handlers::delete_all_events))
-        .route("/{id}", get(handlers::get_event))
-        .route("/{id}", delete(handlers::delete_event))
-        .route("/{id}/deliveries", get(handlers::get_event_deliveries))
+pub fn event_openapi_router() -> OpenApiRouter<AppState> {
+    OpenApiRouter::new() 
+        .routes(routes!(handlers::post_event))
+        .routes(routes!(handlers::get_all_events))
+        .routes(routes!(handlers::delete_all_events))
+        .routes(routes!(handlers::get_event))
+        .routes(routes!(handlers::delete_event))
+        .routes(routes!(handlers::get_event_deliveries))
 }  
