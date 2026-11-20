@@ -18,7 +18,7 @@ mod infra {
     pub mod impl_service;
 }
 
-pub use api::routes::{event_routes};
+pub use api::routes::event_openapi_router;
 pub use domain::service::EventServiceTrait;
 pub use infra::impl_service::EventService;
  
