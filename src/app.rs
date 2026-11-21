@@ -3,10 +3,16 @@ use crate::{
     domains::{
         events::event_openapi_router,
         z_pages::{z_page_openapi_router}
-    }
+    },
+    errors::AppError,
 };
 
-use axum::Router;
+use axum::extract::Path;
+use axum::http::{StatusCode, Uri};
+use axum::{
+    response::IntoResponse,
+    Router
+};
 use utoipa_axum::router::OpenApiRouter;
 use utoipa_swagger_ui::SwaggerUi;
 
@@ -38,6 +44,11 @@ pub fn create_router(shared_state: AppState) -> Router {
         .merge(event_routes)
         .merge(z_page_routes)
         .merge(swagger_ui_routes)
+        .fallback(fallback)
         // .fallback(fallback)
         .with_state(shared_state)
+}
+
+pub async fn fallback(uri: Uri) -> Result<impl IntoResponse, AppError> {
+    Ok((StatusCode::NOT_FOUND, format!("The requested URL {uri} was not found on this server.")))
 }
