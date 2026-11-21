@@ -1,14 +1,13 @@
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
-    BoxError,
 };
 
 use sqlx::Error as SqlxError;
 use thiserror::Error;
-use tracing::error;
+// use tracing::error;
 
-use crate::dto::{ApiResponse, RestApiResponse};
+use crate::dto::ApiResponse;
 
 #[derive(Error, Debug)]
 pub enum AppError {
@@ -70,12 +69,12 @@ impl IntoResponse for AppError {
             AppError::TokenCreation => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::UserNotFound => StatusCode::NOT_FOUND,
         };
-        let body = axum::Json(ApiResponse::<()> {
-            status: status.as_u16(),
+        let response = ApiResponse::<()> {
+            status: status,
             message: self.to_string(),
             data: None,
-        });
+        };
 
-        (status, body).into_response()
+        response.into_response()
     }
 }
