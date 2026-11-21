@@ -68,12 +68,12 @@ impl IntoResponse for AppError {
             AppError::TokenCreation => StatusCode::INTERNAL_SERVER_ERROR,
             AppError::UserNotFound => StatusCode::NOT_FOUND,
         };
-        let body = axum::Json(ApiResponse::<()> {
-            status: status.as_u16(),
+        let response = ApiResponse::<()> {
+            status: status,
             message: self.to_string(),
             data: None,
-        });
+        };
 
-        (status, body).into_response()
+        response.into_response()
     }
 }

@@ -1,5 +1,5 @@
 use crate::{
-    dto::RestApiResponse,
+    dto::ApiResponse,
     app_state::AppState,
     errors::AppError,
     domains::{
@@ -27,7 +27,7 @@ pub async fn post_event(
     Json(create_event): Json<CreateEventDto>,
 ) -> Result<impl IntoResponse, AppError> {
     let event = state.event_service.create_event(create_event).await?;
-    Ok(RestApiResponse::success(event))
+    Ok(ApiResponse::success(event))
 }
 
 
@@ -42,7 +42,7 @@ pub async fn get_all_events(
     State(state): State<AppState>, 
 ) -> Result<impl IntoResponse, AppError> {
     let events = state.event_service.get_events().await?;
-    Ok(RestApiResponse::success(events))
+    Ok(ApiResponse::success(events))
 }
 
 
@@ -73,7 +73,7 @@ pub async fn get_event(
     axum::extract::Path(event_uuid): axum::extract::Path<Uuid>,
 ) -> Result<impl IntoResponse, AppError> {    
     let event = state.event_service.get_event_by_uuid(event_uuid).await?;
-    Ok(RestApiResponse::success(event))
+    Ok(ApiResponse::success(event))
 }
 
 

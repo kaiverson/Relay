@@ -1,5 +1,5 @@
 use crate::{
-    dto::RestApiResponse,
+    dto::ApiResponse,
     errors::AppError
 };
 
@@ -15,6 +15,6 @@ use axum::response::IntoResponse;
 )]
 pub async fn get_healthz(
 ) -> Result<impl IntoResponse, AppError> {
-    Ok(RestApiResponse::success("Ok"))
+    Ok(ApiResponse::success("Ok"))
 }
 

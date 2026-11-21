@@ -1,18 +1,21 @@
-// This code comes from https://github.com/sukjaelee/clean_axum_demo/blob/main/src/common/dto.rs
+use axum::{http::StatusCode, response::{IntoResponse, Response}};
+use serde::Serialize;
 
-use axum::response::{IntoResponse, Response};
-use serde::{Deserialize, Serialize};
-
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Debug)]
 pub struct ApiResponse<T>
 where 
     T: Serialize,
 {
-    pub status: u16, 
+    pub status: StatusCode, 
     pub message: String, 
     pub data: Option<T>
 }
 
+#[derive(Serialize)]
+struct ApiResponseBody<T: Serialize> {
+    message: String,
+    data: Option<T>,
+}
 
 impl<T> ApiResponse<T>
 where 
@@ -20,7 +23,7 @@ where
 {
     pub fn success(data: T) -> Self {
         Self {
-            status: 200, 
+            status: StatusCode::OK, 
             message: "success".to_string(), 
             data: Some(data),
         }
@@ -28,13 +31,13 @@ where
 
     pub fn success_with_message(message: impl Into<String>, data: T) -> Self {
         Self {
-            status: 200, 
+            status: StatusCode::OK, 
             message: message.into(), 
             data: Some(data)
         }
     }
 
-    pub fn failure(status: u16, message: impl Into<String>) -> Self {
+    pub fn failure(status: StatusCode, message: impl Into<String>) -> Self {
         Self {
             status, 
             message: message.into(), 
@@ -43,27 +46,12 @@ where
     }
 }
 
-
-#[derive(Deserialize, Debug)]
-pub struct RestApiResponse<T: Serialize>(pub ApiResponse<T>);
-
-impl<T: Serialize> RestApiResponse<T> {
-
-    pub fn success(data: T) -> Self {
-        Self(ApiResponse::success(data))
-    }
-
-    pub fn success_with_message(message: impl Into<String>, data: T) -> Self {
-        Self(ApiResponse::success_with_message(message, data))
-    }
-
-    pub fn failure(status: u16, message: impl Into<String>) -> Self {
-        Self(ApiResponse::failure(status, message))
-    }
-}
-
-impl<T: Serialize> IntoResponse for RestApiResponse<T> {
+impl<T: Serialize> IntoResponse for ApiResponse<T> {
     fn into_response(self) -> Response { 
-        axum::Json(self.0).into_response()
+        let body = ApiResponseBody {
+            message: self.message, 
+            data: self.data
+        };
+        (self.status, axum::Json(body)).into_response()
     }
 }
