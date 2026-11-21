@@ -18,7 +18,7 @@ use uuid::Uuid;
 
 #[utoipa::path(
     post, 
-    path = "/event",
+    path = "/",
     responses((status = 200, description = "Create event")), 
     tag = "Events"
 )]
@@ -34,7 +34,7 @@ pub async fn post_event(
 
 #[utoipa::path(
     get, 
-    path = "/event", 
+    path = "/", 
     responses((status = 200, description = "Get all events", body = Vec<EventDto>)),
     tag = "Events"
 )]
@@ -49,7 +49,7 @@ pub async fn get_all_events(
 
 #[utoipa::path(
     delete, 
-    path = "/event", 
+    path = "/", 
     responses((status = 200, description = "Delete all events")),
     tag = "Events",
 )]
@@ -64,7 +64,7 @@ pub async fn delete_all_events(
 
 #[utoipa::path(
     get, 
-    path = "/event/{uuid}",
+    path = "/{uuid}",
     responses((status = 200, description = "Get event by UUID", body = EventDto)),
     tag = "Events"
 )]
@@ -80,7 +80,7 @@ pub async fn get_event(
 
 #[utoipa::path(
     delete, 
-    path="/event/{uuid}",
+    path="/{uuid}",
     responses((status = 200, description = "Delete event", body = EventDto)),
     tag="Events"
 )]
@@ -96,7 +96,7 @@ pub async fn delete_event(
 
 #[utoipa::path(
     get, 
-    path = "/event/{uuid}/deliveries",
+    path = "/{uuid}/deliveries",
     responses((status = 200, description = "Get event deliveries")),
     tag = "Events"
 )]

@@ -5,7 +5,6 @@ use axum::{
 
 use sqlx::Error as SqlxError;
 use thiserror::Error;
-// use tracing::error;
 
 use crate::dto::ApiResponse;
 
